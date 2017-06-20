@@ -1,0 +1,95 @@
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	background: #222222;
+	color:white;
+}
+
+.container {
+	height: 100%;
+	border: 1px solid white;
+	text-align: center;
+}
+.list, .form {
+	width: 400px;
+	margin: auto;
+	text-align: center;
+
+}
+.list li {
+	list-style: none;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 18px;
+}
+
+li label {
+	background-color: white;
+	color: black;
+	width: 100%;
+}
+
+
+a {
+	cursor: pointer;
+	padding: 2px;
+}
+
+
+a[type="button"] {
+
+	background-color: white;
+	color:black;
+}
+a[type="button"]:hover {
+
+	background-color: gray;
+	color:white;
+}
+
+input {
+	background-color: #222222;
+	border: 1px solid white;
+	color: white;
+	font-size: 18px;
+}
+
+.list-col-1, .list-col-2, .list-col-3 {
+	height: 25px;
+	float: left;
+	background-color: white;
+	margin-top: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color: black;
+}
+
+.list-col-1 {
+	width: 30px;
+}
+.list-col-2 {
+
+	input:disabled {
+		background-color: white;
+		color: black;
+		width: 215px;
+		border: none;
+	}
+
+	input{
+		background-color: #aaaaaa;
+		color: black;
+		width: 215px;
+		border: 1px solid blue;
+	}
+
+	
+	width: 220px;
+	text-align: left;
+}
+.list-col-3 {
+	width: 145px;
+}
+

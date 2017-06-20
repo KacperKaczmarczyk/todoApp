@@ -1,50 +1,80 @@
 angular.
-	module('todoList').
-	component('todoList', {
-		templateUrl: 'todo-list/todo-list.template.html',
-		controller: ['todo', function TaskListController(todo,$scope) {
-			var ctrl = this;
-			ctrl.disabled = 'true';
-			ctrl.newTask = { name: '',  done: 'red'};
-			
-	    	var promise = function(){
-	    		todo.getAll().then(function(result){
-	    		ctrl.list = result.todos;
-	    		console.log('lislt: %O', result.todos);
-	    		});
-	    	};
-	    	
-			ctrl.list = promise();
+module('todoList').
+component('todoList', {
+    templateUrl: 'todo-list/todo-list.template.html',
+    controller: ['todo', '$scope', TaskListController]
+});
 
+function TaskListController(todo, $scope) {
+    var ctrl = this;
 
-	    	ctrl.add = function() {
-	    		console.log('dodaj zadanie: ' + ctrl.newTask.name);
-	    		todo.add(ctrl.newTask).then(function(){
-	    			ctrl.list = promise();
-	    		});
-	    	};
+    ctrl.newTask = {
+        name: '',
+        done: 'red'
+    };
 
-	    	ctrl.update = function(task) {
-	    		todo.update(task).then(function(){
-	    			ctrl.list = promise();
-	    		});
-	    	};
+    //LoadList
+    var handleSuccesLoadList = function(res) {
+        ctrl.list = res.todos;
+    };
 
-	    	ctrl.remove = function(task) {
-	    		console.log('usun zadanie: ' + task.text);
-	    		todo.remove(task).then(function(){
-	    			ctrl.list = promise();
-	    		});
-	    	};
+    var loadList = function() {
+        todo.getAll().then(handleSuccesLoadList).catch(handleError);
+    };
 
-	    	ctrl.change = function(task) {
-	    		console.log('change: ' + task.text);
-	    		if(task.completed == true){
-	    			task.completed = false;
-	    		}
-	    		else {
-	    			task.completed = true;
-	    		}
-	    		
-	    	};
-    }]});
+    loadList();
+
+    //handle method
+    var handleSuccesAdd = function(res) {
+        ctrl.list.push(res.data);
+        ctrl.newTask = {
+            name: '',
+            done: 'red'
+        };
+    };
+
+    var handleSuccesUpdate = function(res) {
+        res.data._id = res.data._creator;
+        var indexToChange = ctrl.list.indexOf(res.data);
+        if (indexToChange !== -1) {
+            ctrl.list.splice(indexToChange, 1);
+        }
+        ctrl.list.push(res.data);
+    };
+
+    var handleSuccesRemove = function(res) {
+        //res.data.todo._id = res.data.todo._creator;
+        var indexToDelete = {};
+        ctrl.list.forEach(function(item) {
+            if (item._id == res.data.todo._id)
+            {
+                indexToDelete = ctrl.list.indexOf(item);
+                break;
+            }
+        });
+        if (indexToDelete !== -1) {
+            ctrl.list.splice(indexToDelete, 1);
+        }
+    };
+
+    var handleError = function(res) {
+        console.log(res.data);
+    };
+
+    //Methods
+    ctrl.add = function() {
+        todo.add(ctrl.newTask).then(handleSuccesAdd).catch(handleError);
+    };
+
+    ctrl.update = function(task) {
+        todo.update(task).then(handleSuccesUpdate).catch(handleError);
+    };
+
+    ctrl.remove = function(task) {
+        todo.remove(task).then(handleSuccesRemove).catch(handleError);
+    };
+    ctrl.change = function(task) {
+        task.completed = !task.completed;
+    };
+
+}

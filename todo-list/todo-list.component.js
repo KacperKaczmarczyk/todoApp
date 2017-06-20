@@ -6,50 +6,44 @@ angular.
 			var ctrl = this;
 			ctrl.disabled = 'true';
 			ctrl.newTask = { name: '',  done: 'red'};
-			console.log('todo: ');
-			todo.getAll();
-	    	ctrl.list = [{
-	    		name: 'wynies smieci',
-	    		done: 'green'
-	    	},{
-	    		name: 'wynies smieci',
-	    		done: 'green'
-	    	},{
-	    		name: 'wynies smieci',
-	    		done: 'red'
-	    	}];
+			
+	    	var promise = function(){
+	    		todo.getAll().then(function(result){
+	    		ctrl.list = result.todos;
+	    		console.log('lislt: %O', result.todos);
+	    		});
+	    	};
 	    	
+			ctrl.list = promise();
+
 
 	    	ctrl.add = function() {
 	    		console.log('dodaj zadanie: ' + ctrl.newTask.name);
-	    		ctrl.list.push(ctrl.newTask);
-	    		ctrl.newTask = {name:'' ,  done: 'red'};
+	    		todo.add(ctrl.newTask).then(function(){
+	    			ctrl.list = promise();
+	    		});
 	    	};
 
-	    	ctrl.edit = function() {
-	    		console.log('edytuj zadanie disabled: ' + ctrl.disabled);
-	    		ctrl.disabled = 'false';
-	    		console.log('disabled: ' + ctrl.disabled);
-
+	    	ctrl.update = function(task) {
+	    		todo.update(task).then(function(){
+	    			ctrl.list = promise();
+	    		});
 	    	};
 
 	    	ctrl.remove = function(task) {
-	    		console.log('usun zadanie: ' + task.name);
-
-	    		var indexToDelete = ctrl.list.indexOf(task);
-
-		        if(indexToDelete !== -1) {
-		          ctrl.list.splice(indexToDelete, 1);
-		        }
+	    		console.log('usun zadanie: ' + task.text);
+	    		todo.remove(task).then(function(){
+	    			ctrl.list = promise();
+	    		});
 	    	};
 
 	    	ctrl.change = function(task) {
-	    		console.log('change: ' + task.name);
-	    		if(task.done == 'green'){
-	    			task.done = 'red';
+	    		console.log('change: ' + task.text);
+	    		if(task.completed == true){
+	    			task.completed = false;
 	    		}
 	    		else {
-	    			task.done = 'green';
+	    			task.completed = true;
 	    		}
 	    		
 	    	};

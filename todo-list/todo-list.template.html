@@ -2,11 +2,10 @@
 
 
 <h1>TODO LIST</h1>
-
 <div class="form">
 	<p>
 	<form ng-submit="$ctrl.add()">
-		<input type="text" ng-model="$ctrl.newTask.name"> 
+		<input type="text" ng-model="$ctrl.newTask.text"> 
 		<input type="submit" value="Dodaj">
 	</form>
 	</p>
@@ -15,16 +14,16 @@
 <div class="list">
 	<li ng-repeat="task in $ctrl.list">
 		<div class="list-col-1">
-			<i class="fa fa-check" aria-hidden="true" style="color: {{task.done}}" ng-click="$ctrl.change(task)"></i> | 
+			<i class="fa fa-check" aria-hidden="true" style="color: {{task.completed ? 'green' : 'red';}}" ng-click="$ctrl.change(task)"></i> | 
 		</div>
 		<div class="list-col-2">
-			<input type="text" value="{{task.name}}" ng-disabled="!editing" >
+			<input type="text" value="{{task.text}}" ng-disabled="!editing" >
 		</div>
 		<div class="list-col-3" >
 		<span>
 			 | <a type="button" ng-click="$ctrl.remove(task)">Usuń</a> | 
 			<a type="button" ng-click="editing=true" ng-show="!editing">Edytuj</a>	
-			<a type="button" ng-click="editing=false" ng-hide="!editing">Zapisz</a>		
+			<a type="button" ng-click="editing=false; $ctrl.update(task)" ng-hide="!editing">Zapisz</a>		
 		</span>
 
 		</div>
